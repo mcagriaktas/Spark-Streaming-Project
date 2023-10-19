@@ -1,0 +1,20 @@
+# This is for starting to data-generator for streaming-data.
+python dataframe_to_kafka.py -i ./input/iot_telemetry_data.csv -t test1 -b kafka:9092
+
+# This is for starting the spark-streaming python scrips.
+spark-submit --packages io.delta:delta-core_2.12:2.4.0,org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 project_main.py
+
+# it's for create topic.
+/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 \
+--create --topic test1 \
+--replication-factor 1 \
+--partitions 3
+
+# it's for checking your topics
+/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list 
+
+# it's for reading your data in your topic
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test1 
+
+# it's for delete the topic.
+/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic test1
