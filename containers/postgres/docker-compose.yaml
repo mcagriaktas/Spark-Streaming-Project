@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    networks:
+      - dahbest
+    environment:
+      POSTGRES_USER: cagri
+      POSTGRES_PASSWORD: 3541
+      POSTGRES_DB: mydb
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    restart: always
+
+networks:
+  dahbest:
+    name: dahbest
+    driver: bridge
+
+volumes:
+  postgresql_data:

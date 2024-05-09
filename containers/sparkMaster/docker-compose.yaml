@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  spark-master:
+    container_name: spark-master
+    deploy:
+        resources:
+            limits:
+              cpus: '2'
+              memory: "4g"
+    build:
+      context: ./spark
+      dockerfile: Dockerfile
+    ports:
+      - "4040:4040"
+      - "7077:7077"
+      - "18080:18080"
+    networks:
+      - cluster
+    volumes:
+      - ./submitfiles:/opt/submitfiles
+    command: sh spark-master.sh
+
+  spark-worker:
+    container_name: spark-worker
+    deploy:
+        resources:
+            limits:
+              cpus: '2'
+              memory: "4g"
+    build:
+      context: ./spark
+      dockerfile: Dockerfile
+    depends_on:
+      - spark-master
+    ports:
+      - "8081-8089:8081"
+    networks:
+      - cluster
+    volumes:
+      - ./submitfiles:/opt/submitFiles
+    command: sh spark-worker.sh
+
+networks:
+  cluster:
+    name: cluster
+ 
